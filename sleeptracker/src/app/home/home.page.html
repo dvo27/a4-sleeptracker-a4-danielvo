@@ -1,20 +1,43 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-tabs>
+  <ion-tab tab="home">
+    <div id="home-page">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>
+            SleepTracker
+          </ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div class="header">Track your sleep</div>
+      </ion-content>
+    </div>
+  </ion-tab>
+  <ion-tab tab="data">
+    <div id="data-page">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>
+            Data & Analytics
+          </ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div class="header">View your data</div>
+      </ion-content>
+    </div>
+  </ion-tab>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
-</ion-content>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="home">
+      <ion-icon name="home"></ion-icon>
+      Home
+    </ion-tab-button>
+    <ion-tab-button tab="data">
+      <ion-icon name="analytics"></ion-icon>
+      Data
+    </ion-tab-button>
+
+  </ion-tab-bar>
+</ion-tabs>
