@@ -1,43 +1,20 @@
-<ion-tabs>
-  <ion-tab tab="home">
-    <div id="home-page">
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>
-            SleepTracker
-          </ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content>
-        <div class="header">Track your sleep</div>
-      </ion-content>
-    </div>
-  </ion-tab>
-  <ion-tab tab="data">
-    <div id="data-page">
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>
-            Data & Analytics
-          </ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content>
-        <div class="header">View your data</div>
-      </ion-content>
-    </div>
-  </ion-tab>
+<ion-header>
+  <ion-toolbar>
+    <ion-title>SleepTracker</ion-title>
+  </ion-toolbar>
+</ion-header>
 
+<ion-content class="ion-padding">
+  <div class="header">How was your sleep?</div>
 
-  <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="home">
-      <ion-icon name="home"></ion-icon>
-      Home
-    </ion-tab-button>
-    <ion-tab-button tab="data">
-      <ion-icon name="analytics"></ion-icon>
-      Data
-    </ion-tab-button>
+  <h1>Today is:</h1>
+  <h2>{{ currentDateTime }}</h2> <!-- Dynamically displays date and time -->
 
-  </ion-tab-bar>
-</ion-tabs>
+  <!-- Date-time button -->
+  <ion-datetime-button datetime="datetime"></ion-datetime-button>
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="datetime"></ion-datetime>
+    </ng-template>
+  </ion-modal>
+</ion-content>
