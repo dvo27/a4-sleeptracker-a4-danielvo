@@ -4,3 +4,43 @@
   text-align: center;
   flex-direction: column;
 }
+
+.logging {
+  background: #656565;
+  margin: 25px;
+  height: 300px;
+  text-align: left;
+  border-radius: 25px;
+}
+
+.logging p {
+  padding-left: 20px;
+  padding-top: 10px;
+  font-size: 20px;
+}
+
+.date {
+  text-align: left;
+  padding: 10px;
+}
+
+.date h1, h4 {
+  margin: 0 !important;
+}
+
+ion-toolbar {
+  --background: #292929;
+}
+
+ion-icon {
+  color: rgb(199, 0, 199);
+  font-size: 64;
+}
+
+ion-segment-button {
+  --color: #ffffff;
+  --color-checked: rgb(151, 0, 151);
+  --border-radius: 20px;
+
+}
+

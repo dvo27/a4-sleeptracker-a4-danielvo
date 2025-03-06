@@ -36,10 +36,4 @@
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
 
-ion-router-outlet {
-    flex: 1;
-    display: block;
-    position: relative; /* Ensure it doesn't overlay */
-    z-index: 1;
-}
   

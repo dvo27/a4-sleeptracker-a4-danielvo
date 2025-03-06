@@ -1,27 +1,36 @@
-<ion-header>
+<ion-header translucent="true">
   <ion-toolbar>
     <ion-title>SleepTracker</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div class="content">How was your sleep?</div>
 
   <!-- Dynamic Section Switching -->
   <div *ngIf="selectedSegment === 'home'">
     <div class="content">
-        <h1>Today is:</h1>
-        <h2>{{ currentDateTime }}</h2>
-    </div>
+      <!-- Display Date Section -->
+      <div class="date">
+        <h1 style="font-weight: bold; font-size: 70;">{{ currentWeekDay }}</h1>
+        <h4>{{ currentDate }}</h4>
+      </div>
 
-    <!-- Date-time button -->
-    <ion-datetime-button datetime="datetime"></ion-datetime-button>
-
-    <ion-modal [keepContentsMounted]="true">
-      <ng-template>
-        <ion-datetime id="datetime"></ion-datetime>
-      </ng-template>
-    </ion-modal>
+      <div class="logging">
+        <p>Time in bed</p>
+      </div>
+      
+      <div class="logging">
+        <p>How's your sleepiness?</p>
+      </div>
+        
+        <!-- Date-time button -->
+        <!-- <ion-datetime-button datetime="datetime"></ion-datetime-button>
+        <ion-modal [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime id="datetime"></ion-datetime>
+          </ng-template>
+        </ion-modal> -->
+      </div>
   </div>
 
   <div *ngIf="selectedSegment === 'data'">
@@ -36,11 +45,9 @@
     <ion-segment [(ngModel)]="selectedSegment">
       <ion-segment-button value="home">
         <ion-icon name="home"></ion-icon>
-        <ion-label>Home</ion-label>
       </ion-segment-button>
       <ion-segment-button value="data">
         <ion-icon name="analytics"></ion-icon>
-        <ion-label>Data</ion-label>
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>

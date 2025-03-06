@@ -19,7 +19,8 @@ import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 	],
   })
   export class HomePage implements OnInit {
-	currentDateTime: string = '';
+	currentWeekDay: string = '';
+	currentDate: string = '';
 	selectedSegment = 'home';
   
 	constructor() {}
@@ -28,19 +29,18 @@ import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 	  this.updateDateTime();
 	  setInterval(() => {
 		this.updateDateTime();	
-	  }, 1000);
+	  }, 1000000);
 	}
   
 	updateDateTime() {
 	  const now = new Date();
-	  this.currentDateTime = now.toLocaleString('en-US', {
+	  this.currentWeekDay = now.toLocaleString('en-US', {
 		weekday: 'long',
+	  });
+	  this.currentDate = now.toLocaleString('en-US', {
 		month: 'short',
 		day: 'numeric',
 		year: 'numeric',
-		hour: '2-digit',
-		minute: '2-digit',
-		hour12: true
 	  });
 	}
 
