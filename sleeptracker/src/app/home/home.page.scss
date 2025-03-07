@@ -1,22 +1,61 @@
 .content {
   display: flex;
   justify-content: center;
-  text-align: center;
+  text-align: left;
   flex-direction: column;
 }
 
+.logging-container p {
+  font-size: 20px;
+  margin-left: 30px;
+  margin-bottom: 10px;
+  margin-top: 5px;
+}
+
 .logging {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
   background: #656565;
   margin: 25px;
-  height: 300px;
-  text-align: left;
+  margin-top: 0;
+  margin-bottom: 10px;
+  padding-top: 0;
+  height: 25vh;
   border-radius: 25px;
 }
 
-.logging p {
-  padding-left: 20px;
-  padding-top: 10px;
-  font-size: 20px;
+.logging h1 {
+  margin: 0;
+  font-size: 50px;
+}
+
+.log-modal ion-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center vertically */
+  align-items: center; /* Center horizontally */
+  height: 100%; /* Ensure full height */
+  padding: 20px;
+  text-align: center; /* Ensure text is centered */
+}
+
+/* Ensure ion-datetime elements have a consistent width */
+.log-modal ion-datetime {
+  width: 100%;
+  max-width: 80vw;
+  margin-left: 25px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* Ensure Save button is also centered */
+.log-modal ion-button {
+  width: 80%;
+  max-width: 300px;
+  padding-left: 15vw;
 }
 
 .date {
@@ -41,6 +80,11 @@ ion-segment-button {
   --color: #ffffff;
   --color-checked: rgb(151, 0, 151);
   --border-radius: 20px;
-
 }
 
+ion-button {
+  --background: #527FE0;
+  // width: 50vw;
+  padding-left: 50vw;
+  padding-right: 50vw;
+}

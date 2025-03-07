@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ModalController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SleepService } from '../services/sleep.service';
@@ -22,14 +22,13 @@ import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 	currentWeekDay: string = '';
 	currentDate: string = '';
 	selectedSegment = 'home';
+	sleepTime: string = '';
+	wakeTime: string = '';
   
-	constructor() {}
+	constructor(private modalCtrl: ModalController) {}
   
 	ngOnInit() {
 	  this.updateDateTime();
-	  setInterval(() => {
-		this.updateDateTime();	
-	  }, 1000000);
 	}
   
 	updateDateTime() {
@@ -42,6 +41,16 @@ import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 		day: 'numeric',
 		year: 'numeric',
 	  });
+	}
+
+	saveSleepData() {
+		console.log(`Sleep Time: ${this.sleepTime}`);
+		console.log(`Wake-Up Time: ${this.wakeTime}`);
+		this.closeModal();
+	}
+	
+	closeModal() {
+		this.modalCtrl.dismiss();
 	}
 
 	/* Ionic doesn't allow bindings to static variables, so this getter can be used instead. */

@@ -5,32 +5,72 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-
+  
   <!-- Dynamic Section Switching -->
   <div *ngIf="selectedSegment === 'home'">
-    <div class="content">
-      <!-- Display Date Section -->
-      <div class="date">
-        <h1 style="font-weight: bold; font-size: 70;">{{ currentWeekDay }}</h1>
-        <h4>{{ currentDate }}</h4>
-      </div>
+    <ion-grid>
+      <div class="content">
+        <ion-row>
+          <ion-col>
+            <div class="date">
+              <h1 style="font-weight: bold; font-size: 30px;">{{ currentWeekDay }}</h1>
+              <h4>{{ currentDate }}</h4>
+            </div>
+          </ion-col>
+        </ion-row>
 
-      <div class="logging">
-        <p>Time in bed</p>
-      </div>
+        <ion-row>
+          <ion-col>
+
+            <!-- Display Date Section -->
+            <div class="logging-container">
+              <p>Time in Bed Last Night</p>
+              <div class="logging">
+                <!-- Display most recent sleep time -->
+                <h1>7hrs 12min</h1>
+              </div>
+              <ion-button id="log-sleep-btn" expand="block" shape="round">Log Sleep</ion-button>
+            </div>
       
-      <div class="logging">
-        <p>How's your sleepiness?</p>
+            <!-- Inline Modal for Logging Sleep -->
+            <ion-modal trigger="log-sleep-btn" [keepContentsMounted]="true" class="log-modal">
+              <ng-template>
+                <ion-header>
+                  <ion-toolbar>
+                    <ion-title>Log Sleep</ion-title>
+                    <ion-buttons slot="end">
+                      <ion-button (click)="closeModal()">Close</ion-button>
+                    </ion-buttons>
+                  </ion-toolbar>
+                </ion-header>
+                
+                <ion-content class="ion-padding">
+                  <h3>Select Sleep Time</h3>
+                  <ion-datetime [(ngModel)]="sleepTime" presentation="time"></ion-datetime>
+      
+                  <h3>Select Wake-Up Time</h3>
+                  <ion-datetime [(ngModel)]="wakeTime" presentation="time"></ion-datetime>
+      
+                  <ion-button expand="block" shape="round" (click)="saveSleepData()">Save</ion-button>
+                </ion-content>
+              </ng-template>
+            </ion-modal>  
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <div class="logging-container">
+              <p>How's your sleepiness?</p>
+              <div class="logging">
+              </div>
+            </div>
+            
+            <ion-button id="log-sleepiness" expand="block" shape="round">Log Sleepiness</ion-button>
+          </ion-col>
+        </ion-row>
       </div>
-        
-        <!-- Date-time button -->
-        <!-- <ion-datetime-button datetime="datetime"></ion-datetime-button>
-        <ion-modal [keepContentsMounted]="true">
-          <ng-template>
-            <ion-datetime id="datetime"></ion-datetime>
-          </ng-template>
-        </ion-modal> -->
-      </div>
+    </ion-grid>
   </div>
 
   <div *ngIf="selectedSegment === 'data'">
