@@ -4,6 +4,8 @@
   </ion-toolbar>
 </ion-header>
 
+<!-- TODO: IMPLEMENT STORAGE AND DATA SECTION -->
+
 <ion-content>
   
   <!-- Dynamic Section Switching -->
@@ -13,12 +15,13 @@
         <ion-row>
           <ion-col>
             <div class="date">
-              <h1 style="font-weight: bold; font-size: 40px;">{{ currentWeekDay }}</h1>
+              <h1>{{ currentWeekDay }}</h1>
               <h4>{{ currentDate }}</h4>
             </div>
           </ion-col>
         </ion-row>
 
+        <!-- Sleep Time Log Row -->
         <ion-row>
           <ion-col>
 
@@ -26,9 +29,18 @@
             <div class="logging-container">
               <p>Time in Bed Last Night</p>
               <div class="logging">
-                <!-- Display most recent sleep time -->
-                <h2>12:00 AM - 7:12 AM</h2>
-                <h2>7hrs 12min</h2>
+                <!-- Display most recent sleep time if available -->
+                <h2 *ngIf="pastSleepLogs.length > 0; else noData">
+                  {{ pastSleepLogs[0]?.sleepDateString }}
+                </h2>
+                <h2 *ngIf="pastSleepLogs.length > 0;">
+                  {{ pastSleepLogs[0]?.sleepSummary }}
+                </h2>
+            
+                <!-- Default message when no sleep data exists -->
+                <ng-template #noData>
+                  <h2>No sleep data available</h2>
+                </ng-template>
               </div>
               <ion-button shape="round" (click)="setOpen('sleep', true)">Log Sleep</ion-button>
 
@@ -51,7 +63,7 @@
                     [preferWheel]="true" 
                     id="sleepTimePicker"
                     [(ngModel)]="sleepTime"
-                    
+                    timeZone="America/Los_Angeles">
                     ></ion-datetime>
         
                     <h3>Select Wake-Up Time</h3>
@@ -60,6 +72,7 @@
                     [preferWheel]="true" 
                     id="wakeTimePicker"
                     [(ngModel)]="wakeTime"
+                    timeZone="America/Los_Angeles">
                     ></ion-datetime>
   
                     <ion-button expand="block" shape="round" (click)="saveSleepData()">Save</ion-button>
@@ -71,11 +84,12 @@
           </ion-col>
         </ion-row>
 
+        <!-- Sleepiness Log Row -->
         <ion-row>
           <ion-col>
             <div class="logging-container">
               <p>How's your sleepiness?</p>
-              
+
               <div class="logging">
                 <!-- Sleepiness Modal -->
                 <ion-modal class="log-modal" [isOpen]="isSleepinessModalOpen" (ionModalDidDismiss)="setOpen('sleepiness', false)">

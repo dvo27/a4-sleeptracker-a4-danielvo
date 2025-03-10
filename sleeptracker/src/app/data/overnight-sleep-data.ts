@@ -3,11 +3,15 @@ import { SleepData } from './sleep-data';
 export class OvernightSleepData extends SleepData {
 	private sleepStart:Date;
 	private sleepEnd:Date;
+	private sleepSummary:string;
+	private sleepDateString:string;
 
 	constructor(sleepStart:Date, sleepEnd:Date) {
 		super();
 		this.sleepStart = sleepStart;
 		this.sleepEnd = sleepEnd;
+		this.sleepSummary = this.summaryString()
+		this.sleepDateString = this.dateString()
 	}
 
 	override summaryString():string {

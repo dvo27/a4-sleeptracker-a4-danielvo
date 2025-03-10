@@ -19,75 +19,96 @@ import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 	],
   })
   export class HomePage implements OnInit {
+	// Create empty strings for current dates
 	currentWeekDay: string = '';
 	currentDate: string = '';
+
+	// Default page segment is home
 	selectedSegment = 'home';
+
+	// Default sleep and wake time to current date
 	sleepTime: string = new Date().toISOString();
 	wakeTime: string = new Date().toISOString();
+
+	// Default empty string for sleep summary
 	sleepSummary: string = '';
+
+	// Checks for whether modals should be open
 	isModalOpen = false;
 	isSleepinessModalOpen = false;
+
+	// Default for sleepiness level
 	sleepinessLevel: number = 1;
 
+	// Stores previous sleep data in an array
+	pastSleepLogs: any[] = [];
+	pastSleepinessLogs: any[] = [];
+
+
   
-	constructor(private alertCtrl: AlertController) {
-	}
+	constructor(private alertCtrl: AlertController, private sleepService: SleepService) {}
   
 	ngOnInit() {
-	  this.updateDateTime();
+	    this.updateDateTime();
 	}
   
 	updateDateTime() {
-	  const now = new Date();
-	  this.currentWeekDay = now.toLocaleString('en-US', {
-		weekday: 'long',
-	  });
-	  this.currentDate = now.toLocaleString('en-US', {
-		month: 'short',
-		day: 'numeric',
-		year: 'numeric',
-	  });
+		const now = new Date();
+		this.currentWeekDay = now.toLocaleString('en-US', {
+			weekday: 'long',
+		});
+		this.currentDate = now.toLocaleString('en-US', {
+			month: 'short',
+			day: 'numeric',
+			year: 'numeric',
+		});
 	}
 
-	async saveSleepData() {
-		// First we check if the sleep range is valid
+	saveSleepData() {
+		console.log('sleepTime ' + this.sleepTime)
+		console.log('wakeTime ' + this.wakeTime)
 		if (this.checkValidSleepTime()) {
-			// Convert selected sleep times to date objects
 			const sleepDate = new Date(this.sleepTime);
 			const wakeDate = new Date(this.wakeTime);
-	
-			// Create OvernightSleepData object and get sleep summary
-			const sleepData = new OvernightSleepData(sleepDate, wakeDate);
-			this.sleepSummary = sleepData.summaryString();
-	
-			console.log(`Summary: ${this.sleepSummary}`);
-			console.log('Sleep Date: ' + sleepDate)
-			console.log('Wake Date: ' + wakeDate)
-	
-			// Sleep data was valid so we can close modal
+			const sleepLog = new OvernightSleepData(sleepDate, wakeDate);
+
+			this.sleepService.logOvernightData(sleepLog);
+			this.loadSavedData();
 			this.setOpen('sleep', false);
 		} else {
-			// Otherwise, alert user that date selection is invalid
-			await this.showInvalidTimeAlert();
+			this.showInvalidTimeAlert();
 		}
 	}
 	
+	saveSleepinessData() {
+		const sleepinessLog = new StanfordSleepinessData(this.sleepinessLevel);
+		this.sleepService.logSleepinessData(sleepinessLog);
+		this.loadSavedData();
+		this.setOpen('sleepiness', false);
+	}
+
+	loadSavedData() {
+		this.pastSleepLogs = this.sleepService.getAllOvernightData();
+		this.pastSleepinessLogs = this.sleepService.getAllSleepinessData();
+		console.log("Loaded Sleep Logs:", this.pastSleepLogs);
+		console.log("Loaded Sleepiness Logs:", this.pastSleepinessLogs);
+	  }
 
 	checkValidSleepTime(): boolean {
 		// Check if there is no sleep time
 		if (!this.sleepTime || !this.wakeTime) {
 			return false;
 		}
-	
+		
 		// Convert datetime strings to Date objects
 		const sleepDate = new Date(this.sleepTime);
 		const wakeDate = new Date(this.wakeTime);
-	
+		
 		// If the wake time was before the sleep time then range is invalid
 		if (wakeDate <= sleepDate) {
 			return false; // Sleep time must be before wake-up time
 		}
-	
+		
 		// Otherwise, we can save data
 		return true;
 	}
@@ -109,12 +130,7 @@ import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 		}
 	}
 
-	saveSleepinessData() {
-		const sleepinessData = new StanfordSleepinessData(this.sleepinessLevel);
-		console.log(`Sleepiness Level: ${this.sleepinessLevel}`);
-		console.log(`Sleepiness Description: ${sleepinessData.summaryString()}`);
-		this.setOpen('sleepiness', false);
-	}
+	
 	
 	getSleepinessDescription(): string {
 	return new StanfordSleepinessData(this.sleepinessLevel).summaryString();
