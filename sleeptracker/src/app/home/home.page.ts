@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicModule, ModalController } from '@ionic/angular';
+import { IonicModule, ModalController, AlertController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SleepService } from '../services/sleep.service';
@@ -22,10 +22,13 @@ import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 	currentWeekDay: string = '';
 	currentDate: string = '';
 	selectedSegment = 'home';
-	sleepTime: string = '';
-	wakeTime: string = '';
+	sleepTime: string = new Date().toISOString();
+	wakeTime: string = new Date().toISOString();
+	sleepSummary: string = '';
+	isModalOpen = false;
   
-	constructor(private modalCtrl: ModalController) {}
+	constructor(private alertCtrl: AlertController) {
+	}
   
 	ngOnInit() {
 	  this.updateDateTime();
@@ -43,14 +46,62 @@ import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 	  });
 	}
 
-	saveSleepData() {
-		console.log(`Sleep Time: ${this.sleepTime}`);
-		console.log(`Wake-Up Time: ${this.wakeTime}`);
-		this.closeModal();
+	async saveSleepData() {
+		// First we check if the sleep range is valid
+		if (this.checkValidSleepTime()) {
+			// Convert selected sleep times to date objects
+			const sleepDate = new Date(this.sleepTime);
+			const wakeDate = new Date(this.wakeTime);
+	
+			// Create OvernightSleepData object and get sleep summary
+			const sleepData = new OvernightSleepData(sleepDate, wakeDate);
+			this.sleepSummary = sleepData.summaryString();
+	
+			console.log(`Summary: ${this.sleepSummary}`);
+	
+			// Sleep data was valid so we can close modal
+			this.setOpen(false);
+		} else {
+			// Otherwise, alert user that date selection is invalid
+			await this.showInvalidTimeAlert();
+		}
 	}
 	
-	closeModal() {
-		this.modalCtrl.dismiss();
+
+	checkValidSleepTime(): boolean {
+		// Check if there is no sleep time
+		if (!this.sleepTime || !this.wakeTime) {
+			return false;
+		}
+	
+		// Convert datetime strings to Date objects
+		const sleepDate = new Date(this.sleepTime);
+		const wakeDate = new Date(this.wakeTime);
+
+		console.log('valid check: ')
+		console.log(sleepDate)
+		console.log(wakeDate)
+	
+		// If the wake time was before the sleep time then range is invalid
+		if (wakeDate <= sleepDate) {
+			return false; // Sleep time must be before wake-up time
+		}
+	
+		// Otherwise, we can save data
+		return true;
+	}
+	
+	async showInvalidTimeAlert() {
+		const alert = await this.alertCtrl.create({
+			header: 'Invalid Time Selection',
+			message: 'Sleep time must be before wake-up time. Please select a valid time.',
+			buttons: ['OK'],
+		});
+		await alert.present();
+	}
+	
+	setOpen(isOpen: boolean) {
+		this.isModalOpen = isOpen;
 	}
 
 	/* Ionic doesn't allow bindings to static variables, so this getter can be used instead. */
