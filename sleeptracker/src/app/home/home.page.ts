@@ -26,6 +26,9 @@ import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 	wakeTime: string = new Date().toISOString();
 	sleepSummary: string = '';
 	isModalOpen = false;
+	isSleepinessModalOpen = false;
+	sleepinessLevel: number = 1;
+
   
 	constructor(private alertCtrl: AlertController) {
 	}
@@ -58,9 +61,11 @@ import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 			this.sleepSummary = sleepData.summaryString();
 	
 			console.log(`Summary: ${this.sleepSummary}`);
+			console.log('Sleep Date: ' + sleepDate)
+			console.log('Wake Date: ' + wakeDate)
 	
 			// Sleep data was valid so we can close modal
-			this.setOpen(false);
+			this.setOpen('sleep', false);
 		} else {
 			// Otherwise, alert user that date selection is invalid
 			await this.showInvalidTimeAlert();
@@ -77,10 +82,6 @@ import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 		// Convert datetime strings to Date objects
 		const sleepDate = new Date(this.sleepTime);
 		const wakeDate = new Date(this.wakeTime);
-
-		console.log('valid check: ')
-		console.log(sleepDate)
-		console.log(wakeDate)
 	
 		// If the wake time was before the sleep time then range is invalid
 		if (wakeDate <= sleepDate) {
@@ -100,9 +101,24 @@ import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 		await alert.present();
 	}
 	
-	setOpen(isOpen: boolean) {
-		this.isModalOpen = isOpen;
+	setOpen(modal: 'sleep' | 'sleepiness', isOpen: boolean) {
+		if (modal === 'sleep') {
+			this.isModalOpen = isOpen;
+		} else if (modal === 'sleepiness') {
+			this.isSleepinessModalOpen = isOpen;
+		}
 	}
+
+	saveSleepinessData() {
+		const sleepinessData = new StanfordSleepinessData(this.sleepinessLevel);
+		console.log(`Sleepiness Level: ${this.sleepinessLevel}`);
+		console.log(`Sleepiness Description: ${sleepinessData.summaryString()}`);
+		this.setOpen('sleepiness', false);
+	}
+	
+	getSleepinessDescription(): string {
+	return new StanfordSleepinessData(this.sleepinessLevel).summaryString();
+	}	
 
 	/* Ionic doesn't allow bindings to static variables, so this getter can be used instead. */
 	get allSleepData() {
