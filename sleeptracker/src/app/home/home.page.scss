@@ -104,12 +104,6 @@
 }
 
 /** Week Selector Container */
-.section-title{
-  font-weight: bold;
-  font-size: 8vw;
-  margin-top: 0;
-}
-
 .week-selector {
   display: flex;
   justify-content: space-around;
@@ -158,7 +152,6 @@
 }
 
 .section-title {
-  font-size: 18px;
   font-weight: bold;
   text-align: left;
   margin-bottom: 10px;
@@ -186,6 +179,8 @@
   font-size: 20px;
   margin-top: 5px;
   margin-bottom: 0;
+  text-align: start;
+
 }
 
 .log-divider {
@@ -193,6 +188,39 @@
   background: white; /* Vertical Divider */
   height: 80%;
   border-radius: 2px;
+}
+
+
+.weekly-trends-container {
+  background: #444; /* Dark Gray Background */
+  padding: 15px;
+  border-radius: 15px;
+  margin-top: 15px;
+}
+
+.weekly-trends {
+  display: flex;
+  justify-content: space-between;
+}
+
+.trend-box {
+  background: #666;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  flex: 1;
+  margin: 5px;
+}
+
+.trend-box h3 {
+  font-size: 1.2em;
+  color: white;
+}
+
+.trend-box p {
+  font-size: 1em;
+  color: #ddd;
+  margin: 5px 0;
 }
 
 

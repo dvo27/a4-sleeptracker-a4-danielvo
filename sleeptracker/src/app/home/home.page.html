@@ -28,14 +28,14 @@
             <!-- Display Date Section -->
             <div class="logging-container">
               <h1>Ready to log your sleep?</h1>
-              <p>Time in Bed Last Night:</p>
+              <p>Time in Bed of Last Log:</p>
               <div class="logging">
                 <!-- Display most recent sleep time if available -->
                 <h2 *ngIf="pastSleepLogs.length > 0; else noData">
-                  {{ pastSleepLogs[0]?.sleepDateString }}
+                  {{ pastSleepLogs[pastSleepLogs.length - 1]?.sleepDateString }}
                 </h2>
                 <h2 *ngIf="pastSleepLogs.length > 0;">
-                  {{ pastSleepLogs[0]?.sleepSummary }}
+                  {{ pastSleepLogs[pastSleepLogs.length - 1]?.sleepSummary }}
                 </h2>
             
                 <!-- Default message when no sleep data exists -->
@@ -89,20 +89,20 @@
         <ion-row>
           <ion-col>
             <div class="logging-container">
-              <p>Last logged sleepiness:</p>
+              <p>Log Today's Sleepiness:</p>
 
               <div class="logging">
                 <!-- Display most recent sleep time if available -->
                 <h2 *ngIf="pastSleepinessLogs.length > 0;">
                   {{ pastSleepinessLogs[0]?.dateString() }}
                 </h2>
-                <h3 *ngIf="pastSleepinessLogs.length > 0; else noData">
+                <h3 *ngIf="pastSleepinessLogs.length > 0; else noSleepinessData">
                   {{ pastSleepinessLogs[0]?.sleepinessSummary }}
                 </h3>
             
                 <!-- Default message when no sleep data exists -->
-                <ng-template #noData>
-                  <h2>No sleep data available</h2>
+                <ng-template #noSleepinessData>
+                  <h2>No sleepiness data available</h2>
                 </ng-template>
                 <!-- Sleepiness Modal -->
                 <ion-modal class="log-modal" [isOpen]="isSleepinessModalOpen" (ionModalDidDismiss)="setOpen('sleepiness', false)">
@@ -154,10 +154,12 @@
 
   <div *ngIf="selectedSegment === 'data'">
     <ion-grid class="data-grid">
+
       <!-- Week Selection and Title Row -->
       <ion-row>
         <ion-col>
           <h1 class="section-title">Your Data & Analytics</h1>    
+
           <!-- Week Selector -->
           <div class="week-selector">
             <div 
@@ -177,6 +179,7 @@
       <ion-row>
         <ion-col>
           <h1 class="section-title">View Day’s Logs</h1>
+          
           <div class="selected-day-log">
 
             <!-- Add on click to share results -->
@@ -203,10 +206,36 @@
             </div>
           </div>
 
+          
         </ion-col>
       </ion-row>
-  
 
+      <!-- Weekly Trends Section -->
+      <ion-row>
+        <ion-col>
+          <div class="weekly-trends-container">
+            <h1 class="section-title">Weekly Insights</h1>
+
+            <div class="weekly-trends">
+              <!-- Sleep Statistics -->
+              <div class="trend-box">
+                <h3>Sleep Duration</h3>
+                <p><strong>Highest:</strong> {{ highestSleep }} hrs</p>
+                <p><strong>Lowest:</strong> {{ lowestSleep }} hrs</p>
+                <p><strong>Average:</strong> {{ averageSleep }} hrs</p>
+              </div>
+
+              <!-- Sleepiness Statistics -->
+              <div class="trend-box">
+                <h3>Sleepiness Ratings</h3>
+                <p><strong>Highest:</strong> {{ highestSleepiness }}</p>
+                <p><strong>Lowest:</strong> {{ lowestSleepiness }}</p>
+                <p><strong>Average:</strong> {{ averageSleepiness }}</p>
+              </div>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
     </ion-grid>
 
   </div>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicModule, ModalController, AlertController } from '@ionic/angular';
+import { IonicModule, AlertController } from '@ionic/angular';
+import { Chart, registerables } from 'chart.js';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SleepService } from '../services/sleep.service';
@@ -52,13 +53,91 @@ export class HomePage implements OnInit {
 	selectedLogSleepAmount: string = '';
 	selectedSleepinessLogRating: number = 0;	// Give it a default of 0
 
+	// Numerical Analysis
+	sleepData: any;
+	sleepinessData: any;
+	highestSleep: number = 0;
+	lowestSleep: number = 0;
+	averageSleep: number = 0.0;
 
-	constructor(private alertCtrl: AlertController, private sleepService: SleepService) { }
+	highestSleepiness: number = 0;
+	lowestSleepiness: number = 0;
+	averageSleepiness: number = 0.0;
+
+	constructor(private alertCtrl: AlertController, private sleepService: SleepService) { 
+		Chart.register(...registerables);
+	}
 
 	ngOnInit() {
 		this.updateDateTime();
 		this.generateWeekDays();
 	}
+
+	ngAfterViewInit() {
+		this.loadWeeklyData();
+	}
+
+	loadWeeklyData() {
+		if (!this.pastSleepLogs || !this.pastSleepinessLogs) {
+			this.pastSleepLogs = [];
+			this.pastSleepinessLogs = [];
+		}
+	
+		this.sleepData = this.pastSleepLogs.map(log => ({
+			date: new Date(log.sleepStart).toISOString().split('T')[0],
+			sleepHours: Math.floor((new Date(log.sleepEnd).getTime() - new Date(log.sleepStart).getTime()) / (1000 * 60 * 60)),
+			sleepMinutes: Math.floor((new Date(log.sleepEnd).getTime() - new Date(log.sleepStart).getTime()) / (1000 * 60)) % 60,
+		}));
+	
+		this.sleepinessData = this.pastSleepinessLogs.map(log => ({
+			date: new Date(log.loggedAt).toISOString().split('T')[0],
+			level: log.getSleepinessLevel(),
+		}));
+	
+		console.log("Processed Sleep Data:", this.sleepData);
+		console.log("Processed Sleepiness Data:", this.sleepinessData);
+	
+		// ✅ Calculate Weekly Trends
+		this.calculateWeeklyTrends();
+	}
+	
+	calculateWeeklyTrends() {
+		if (!this.sleepData || this.sleepData.length === 0) {
+			console.warn("No sleep data available for weekly trends.");
+			this.highestSleep = 0;
+			this.lowestSleep = 0;
+			this.averageSleep = 0.0;
+			return;
+		}
+	
+		// ✅ Extract sleep durations (in hours)
+		const sleepDurations: number[] = this.sleepData.map((log: { sleepHours: number; sleepMinutes: number }) => 
+			log.sleepHours + log.sleepMinutes / 60
+		);
+	
+		if (sleepDurations.length === 0) {
+			console.warn("No valid sleep duration entries found.");
+			return;
+		}
+	
+		this.highestSleep = parseFloat(Math.max(...sleepDurations).toFixed(2));
+		this.lowestSleep = parseFloat(Math.min(...sleepDurations).toFixed(2));
+		this.averageSleep = parseFloat((sleepDurations.reduce((a, b) => a + b, 0) / sleepDurations.length).toFixed(2));
+		
+	
+		// ✅ Extract sleepiness ratings
+		const sleepinessLevels: number[] = this.sleepinessData.map((log: { level: number }) => log.level);
+	
+		this.highestSleepiness = parseFloat(Math.max(...sleepinessLevels).toFixed(2));
+		this.lowestSleepiness = parseFloat(Math.min(...sleepinessLevels).toFixed(2));
+		this.averageSleepiness = parseFloat((sleepinessLevels.reduce((a, b) => a + b, 0) / sleepinessLevels.length).toFixed(2));
+
+	
+		console.log("Weekly Sleep Stats - High:", this.highestSleep, "Low:", this.lowestSleep, "Avg:", this.averageSleep);
+		console.log("Weekly Sleepiness Stats - High:", this.highestSleepiness, "Low:", this.lowestSleepiness, "Avg:", this.averageSleepiness);
+	}
+	
+	
 
 	generateWeekDays() {
 		const today = new Date();
@@ -80,7 +159,7 @@ export class HomePage implements OnInit {
 	  
 
 	  selectDate(dateString: string) {
-		console.log("Raw Selected Date:", dateString);
+		// console.log("Raw Selected Date:", dateString);
 	
 		this.selectedDate = dateString;
 	
@@ -97,7 +176,7 @@ export class HomePage implements OnInit {
 							  String(logDate.getMonth() + 1).padStart(2, '0') + '-' +
 							  String(logDate.getDate()).padStart(2, '0');
 			
-			console.log("Comparing Log Date:", logDateStr, "with Selected Date:", selectedDateStr);
+			// console.log("Comparing Log Date:", logDateStr, "with Selected Date:", selectedDateStr);
 			return logDateStr === selectedDateStr;
 		}) || null;
 	
@@ -107,18 +186,18 @@ export class HomePage implements OnInit {
 							  String(logDate.getMonth() + 1).padStart(2, '0') + '-' +
 							  String(logDate.getDate()).padStart(2, '0');
 	
-			console.log("Comparing Sleepiness Log Date:", logDateStr, "with Selected Date:", selectedDateStr);
+			// console.log("Comparing Sleepiness Log Date:", logDateStr, "with Selected Date:", selectedDateStr);
 			return logDateStr === selectedDateStr;
 		}) || null;
 
 		this.selectedLogSleepAmount = this.selectedLog ? this.selectedLog.sleepSummary : 'No data';
 		this.selectedSleepinessLogRating = this.selectedSleepinessLog ? this.selectedSleepinessLog.getSleepinessLevel() : 'No data';
 	
-		console.log("Final Selected Sleep Log:", this.selectedLog);
-		console.log("Final Selected Sleep Log Sleep Amount:", this.selectedLogSleepAmount);
+		// console.log("Final Selected Sleep Log:", this.selectedLog);
+		// console.log("Final Selected Sleep Log Sleep Amount:", this.selectedLogSleepAmount);
 		
-		console.log("Final Selected Sleepiness Log:", this.selectedSleepinessLog);
-		console.log("Final Selected Sleepiness Log Rating:", this.selectedSleepinessLogRating);
+		// console.log("Final Selected Sleepiness Log:", this.selectedSleepinessLog);
+		// console.log("Final Selected Sleepiness Log Rating:", this.selectedSleepinessLogRating);
 	}
 	
 
@@ -163,9 +242,28 @@ export class HomePage implements OnInit {
 	loadSavedData() {
 		this.pastSleepLogs = this.sleepService.getAllOvernightData();
 		this.pastSleepinessLogs = this.sleepService.getAllSleepinessData();
-		console.log("Loaded Sleep Logs:", this.pastSleepLogs);
-		console.log("Loaded Sleepiness Logs:", this.pastSleepinessLogs);
+	
+		this.sleepData = this.pastSleepLogs.map((log: OvernightSleepData) => {
+			return {
+				date: log.getStartTime().toISOString().split('T')[0], // ✅ Use getter
+				sleepHours: Math.floor((log.getEndTime().getTime() - log.getStartTime().getTime()) / (1000 * 60 * 60)), // ✅ Use getter
+				sleepMinutes: Math.floor((log.getEndTime().getTime() - log.getStartTime().getTime()) / (1000 * 60)) % 60, // ✅ Use getter
+			};
+		});
+		
+		this.sleepinessData = this.pastSleepinessLogs.map((log: StanfordSleepinessData) => {
+			return {
+				date: log.loggedAt.toISOString().split('T')[0],
+				level: log.getSleepinessLevel(),
+			};
+		});
+	
+		console.log("Loaded Sleep Logs:", this.sleepData);
+		console.log("Loaded Sleepiness Logs:", this.sleepinessData);
+	
+		this.calculateWeeklyTrends(); // ✅ Recalculate stats after loading data
 	}
+	
 
 
 	checkValidSleepTime(): boolean {
