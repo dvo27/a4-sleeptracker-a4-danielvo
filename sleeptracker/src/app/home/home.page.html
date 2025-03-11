@@ -4,8 +4,6 @@
   </ion-toolbar>
 </ion-header>
 
-<!-- TODO: IMPLEMENT STORAGE AND DATA SECTION -->
-
 <ion-content>
   
   <!-- Dynamic Section Switching -->
@@ -57,6 +55,7 @@
                     </ion-toolbar>
                   </ion-header>
                   
+                  <!-- Pickers for sleep and wake time -->
                   <ion-content class="ion-padding">
                     <h3>Select Sleep Time</h3>
                     <ion-datetime 
@@ -104,6 +103,7 @@
                 <ng-template #noSleepinessData>
                   <h2>No sleepiness data available</h2>
                 </ng-template>
+
                 <!-- Sleepiness Modal -->
                 <ion-modal class="log-modal" [isOpen]="isSleepinessModalOpen" (ionModalDidDismiss)="setOpen('sleepiness', false)">
                   <ng-template>
@@ -119,6 +119,14 @@
                     <ion-content class="ion-padding">
                       <h3 style="text-align: center; font-weight: bold;">My sleepiness is at a...</h3>
                       
+                      <!-- Date Picker -->
+                      <ion-label>Select Date:</ion-label>
+                      <ion-datetime 
+                      [(ngModel)]="selectedSleepinessDate" 
+                      presentation="date" 
+                      [preferWheel]="true">
+                      </ion-datetime>
+
                       <!-- Sleepiness Level Number -->
                       <h1 style="text-align: center; font-weight: bold;">{{ sleepinessLevel }}</h1>
 
@@ -210,30 +218,36 @@
         </ion-col>
       </ion-row>
 
-      <!-- Weekly Trends Section -->
+      <!-- Weekly Insights Section -->
       <ion-row>
         <ion-col>
-          <div class="weekly-trends-container">
-            <h1 class="section-title">Weekly Insights</h1>
+          <div class="weekly-insights">
+            <h2>Weekly Insights</h2>
+            
+            <!-- Sleep Duration Insights -->
+            <div class="insight-box">
+              <h3>Sleep Duration</h3>
+              <p><strong>Highest:</strong> {{ highestSleep }} hrs</p>
+              <p><strong>Lowest:</strong> {{ lowestSleep }} hrs</p>
+              <p><strong>Average:</strong> {{ averageSleep }} hrs</p>
+            </div>
 
-            <div class="weekly-trends">
-              <!-- Sleep Statistics -->
-              <div class="trend-box">
-                <h3>Sleep Duration</h3>
-                <p><strong>Highest:</strong> {{ highestSleep }} hrs</p>
-                <p><strong>Lowest:</strong> {{ lowestSleep }} hrs</p>
-                <p><strong>Average:</strong> {{ averageSleep }} hrs</p>
-              </div>
-
-              <!-- Sleepiness Statistics -->
-              <div class="trend-box">
-                <h3>Sleepiness Ratings</h3>
-                <p><strong>Highest:</strong> {{ highestSleepiness }}</p>
-                <p><strong>Lowest:</strong> {{ lowestSleepiness }}</p>
-                <p><strong>Average:</strong> {{ averageSleepiness }}</p>
-              </div>
+            <!-- Sleepiness Rating Insights -->
+            <div class="insight-box">
+              <h3>Sleepiness Ratings</h3>
+              <p><strong>Highest:</strong> {{ highestSleepiness }}</p>
+              <p><strong>Lowest:</strong> {{ lowestSleepiness }}</p>
+              <p><strong>Average:</strong> {{ averageSleepiness }}</p>
             </div>
           </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-button expand="block" shape="round" (click)="shareInsights()">
+            Share Insights
+          </ion-button>
         </ion-col>
       </ion-row>
     </ion-grid>

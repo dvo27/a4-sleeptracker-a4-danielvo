@@ -17,14 +17,12 @@ export class SleepService {
   public logOvernightData(sleepData: OvernightSleepData) {
     SleepService.AllSleepData.push(sleepData);
     SleepService.AllOvernightData.push(sleepData);
-    console.log("Saved Overnight Sleep Data:", sleepData);
   }
 
   /* Save Sleepiness Data (Locally) */
   public logSleepinessData(sleepData: StanfordSleepinessData) {
     SleepService.AllSleepData.push(sleepData);
     SleepService.AllSleepinessData.push(sleepData);
-    console.log("Saved Sleepiness Data:", sleepData);
   }
 
   /* Retrieve All Stored Data */

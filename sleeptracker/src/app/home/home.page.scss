@@ -190,38 +190,25 @@
   border-radius: 2px;
 }
 
-
-.weekly-trends-container {
-  background: #444; /* Dark Gray Background */
-  padding: 15px;
-  border-radius: 15px;
-  margin-top: 15px;
-}
-
-.weekly-trends {
-  display: flex;
-  justify-content: space-between;
-}
-
-.trend-box {
-  background: #666;
-  padding: 15px;
-  border-radius: 10px;
+.weekly-insights {
   text-align: center;
-  flex: 1;
-  margin: 5px;
+  padding: 15px;
+  background: #444;
+  border-radius: 10px;
 }
 
-.trend-box h3 {
-  font-size: 1.2em;
-  color: white;
+.weekly-insights h2 {
+  font-weight: bold;
+  margin: 0;
 }
 
-.trend-box p {
-  font-size: 1em;
-  color: #ddd;
-  margin: 5px 0;
+.insight-box {
+  background: #666;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px 0;
 }
+
 
 
 // Ion Component Styling
