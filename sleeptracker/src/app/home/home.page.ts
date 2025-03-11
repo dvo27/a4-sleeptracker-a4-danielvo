@@ -13,12 +13,12 @@ import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 	styleUrls: ['home.page.scss'],
 	standalone: true,
 	imports: [
-	  IonicModule,
-	  CommonModule,
-	  FormsModule
+		IonicModule,
+		CommonModule,
+		FormsModule
 	],
-  })
-  export class HomePage implements OnInit {
+})
+export class HomePage implements OnInit {
 	// Create empty strings for current dates
 	currentWeekDay: string = '';
 	currentDate: string = '';
@@ -44,14 +44,79 @@ import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 	pastSleepLogs: any[] = [];
 	pastSleepinessLogs: any[] = [];
 
+	// Data section
+	weekDays: any[] = [];
+	selectedDate: string = ''
+	selectedLog: any = null;
+	selectedSleepinessLog: any = null;
 
-  
-	constructor(private alertCtrl: AlertController, private sleepService: SleepService) {}
-  
+
+	constructor(private alertCtrl: AlertController, private sleepService: SleepService) { }
+
 	ngOnInit() {
-	    this.updateDateTime();
+		this.updateDateTime();
+		this.generateWeekDays();
 	}
-  
+
+	generateWeekDays() {
+		const today = new Date();
+		this.weekDays = Array.from({ length: 7 }, (_, i) => {
+		  const date = new Date(today);
+		  date.setDate(today.getDate() - i);
+		  
+		  // Adjust to local time zone by manually formatting
+		  const localDateString = date.getFullYear() + '-' +
+			String(date.getMonth() + 1).padStart(2, '0') + '-' +
+			String(date.getDate()).padStart(2, '0');
+	  
+		  return {
+			date: localDateString,
+			label: date.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' }),
+		  };
+		}).reverse();
+	  }
+	  
+
+	  selectDate(dateString: string) {
+		console.log("Raw Selected Date:", dateString);
+	
+		this.selectedDate = dateString;
+	
+		this.updateSelectedDate();
+	}
+	
+
+
+	updateSelectedDate() {
+		const selectedDateStr = this.selectedDate;
+	
+		this.selectedLog = this.pastSleepLogs.find(log => {
+			const logDate = new Date(log.sleepStart);
+			const logDateStr = logDate.getFullYear() + '-' +
+							  String(logDate.getMonth() + 1).padStart(2, '0') + '-' +
+							  String(logDate.getDate()).padStart(2, '0');
+			
+			console.log("Comparing Log Date:", logDateStr, "with Selected Date:", selectedDateStr);
+			return logDateStr === selectedDateStr;
+		}) || null;
+	
+		this.selectedSleepinessLog = this.pastSleepinessLogs.find(log => {
+			const logDate = new Date(log.loggedAt);
+			const logDateStr = logDate.getFullYear() + '-' +
+							  String(logDate.getMonth() + 1).padStart(2, '0') + '-' +
+							  String(logDate.getDate()).padStart(2, '0');
+	
+			console.log("Comparing Sleepiness Log Date:", logDateStr, "with Selected Date:", selectedDateStr);
+			return logDateStr === selectedDateStr;
+		}) || null;
+	
+		console.log("Final Selected Sleep Log:", this.selectedLog);
+		console.log("Final Selected Sleepiness Log:", this.selectedSleepinessLog);
+	}
+	
+	
+
+
 	updateDateTime() {
 		const now = new Date();
 		this.currentWeekDay = now.toLocaleString('en-US', {
@@ -63,6 +128,7 @@ import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 			year: 'numeric',
 		});
 	}
+
 
 	saveSleepData() {
 		console.log('sleepTime ' + this.sleepTime)
@@ -79,7 +145,8 @@ import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 			this.showInvalidTimeAlert();
 		}
 	}
-	
+
+
 	saveSleepinessData() {
 		const sleepinessLog = new StanfordSleepinessData(this.sleepinessLevel);
 		this.sleepService.logSleepinessData(sleepinessLog);
@@ -87,32 +154,35 @@ import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 		this.setOpen('sleepiness', false);
 	}
 
+
 	loadSavedData() {
 		this.pastSleepLogs = this.sleepService.getAllOvernightData();
 		this.pastSleepinessLogs = this.sleepService.getAllSleepinessData();
 		console.log("Loaded Sleep Logs:", this.pastSleepLogs);
 		console.log("Loaded Sleepiness Logs:", this.pastSleepinessLogs);
-	  }
+	}
+
 
 	checkValidSleepTime(): boolean {
 		// Check if there is no sleep time
 		if (!this.sleepTime || !this.wakeTime) {
 			return false;
 		}
-		
+
 		// Convert datetime strings to Date objects
 		const sleepDate = new Date(this.sleepTime);
 		const wakeDate = new Date(this.wakeTime);
-		
+
 		// If the wake time was before the sleep time then range is invalid
 		if (wakeDate <= sleepDate) {
 			return false; // Sleep time must be before wake-up time
 		}
-		
+
 		// Otherwise, we can save data
 		return true;
 	}
-	
+
+
 	async showInvalidTimeAlert() {
 		const alert = await this.alertCtrl.create({
 			header: 'Invalid Time Selection',
@@ -121,7 +191,8 @@ import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 		});
 		await alert.present();
 	}
-	
+
+
 	setOpen(modal: 'sleep' | 'sleepiness', isOpen: boolean) {
 		if (modal === 'sleep') {
 			this.isModalOpen = isOpen;
@@ -130,11 +201,11 @@ import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 		}
 	}
 
-	
-	
+
 	getSleepinessDescription(): string {
-	return new StanfordSleepinessData(this.sleepinessLevel).summaryString();
-	}	
+		return new StanfordSleepinessData(this.sleepinessLevel).summaryString();
+	}
+
 
 	/* Ionic doesn't allow bindings to static variables, so this getter can be used instead. */
 	get allSleepData() {

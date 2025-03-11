@@ -14,6 +14,14 @@ export class OvernightSleepData extends SleepData {
 		this.sleepDateString = this.dateString()
 	}
 
+	getStartTime(): Date {
+		return this.sleepStart;
+	}
+
+	getEndTime(): Date {
+		return this.sleepEnd;
+	}
+
 	override summaryString():string {
 		var sleepStart_ms = this.sleepStart.getTime();
 		var sleepEnd_ms = this.sleepEnd.getTime();

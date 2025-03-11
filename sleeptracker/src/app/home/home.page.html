@@ -27,7 +27,8 @@
 
             <!-- Display Date Section -->
             <div class="logging-container">
-              <p>Time in Bed Last Night</p>
+              <h1>Ready to log your sleep?</h1>
+              <p>Time in Bed Last Night:</p>
               <div class="logging">
                 <!-- Display most recent sleep time if available -->
                 <h2 *ngIf="pastSleepLogs.length > 0; else noData">
@@ -88,9 +89,21 @@
         <ion-row>
           <ion-col>
             <div class="logging-container">
-              <p>How's your sleepiness?</p>
+              <p>Last logged sleepiness:</p>
 
               <div class="logging">
+                <!-- Display most recent sleep time if available -->
+                <h2 *ngIf="pastSleepinessLogs.length > 0;">
+                  {{ pastSleepinessLogs[0]?.dateString() }}
+                </h2>
+                <h3 *ngIf="pastSleepinessLogs.length > 0; else noData">
+                  {{ pastSleepinessLogs[0]?.sleepinessSummary }}
+                </h3>
+            
+                <!-- Default message when no sleep data exists -->
+                <ng-template #noData>
+                  <h2>No sleep data available</h2>
+                </ng-template>
                 <!-- Sleepiness Modal -->
                 <ion-modal class="log-modal" [isOpen]="isSleepinessModalOpen" (ionModalDidDismiss)="setOpen('sleepiness', false)">
                   <ng-template>
@@ -140,8 +153,39 @@
   </div>
 
   <div *ngIf="selectedSegment === 'data'">
-    <h1>Data & Analytics</h1>
-    <p>View your sleep data here.</p>
+    <ion-grid class="data-grid">
+      <!-- Week Selection and Title Row -->
+      <ion-row>
+        <ion-col>
+          <h1 class="section-title">Your Data & Analytics</h1>    
+          <!-- Week Selector -->
+          <div class="week-selector">
+            <div 
+              *ngFor="let day of weekDays" 
+              class="week-day"
+              [class.active]="selectedDate === day.date"
+              (click)="selectDate(day.date)">
+              
+              <span class="day-letter">{{ day.label.split(' ')[0] }}</span>
+              <span class="day-number">{{ day.label.split(' ')[1] }}</span>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <!-- View Day's Log Section-->
+      <ion-row>
+        <ion-col>
+          <div class="selected-day-log">
+            <h1>View Day’s Logs</h1>
+          </div>
+
+        </ion-col>
+      </ion-row>
+  
+
+    </ion-grid>
+
   </div>
 </ion-content>
 

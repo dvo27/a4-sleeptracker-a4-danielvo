@@ -24,6 +24,10 @@
   margin-bottom: 10px;
   margin-top: 5px;
 }
+.logging-container h1 {
+  font-weight: bold;
+  margin-top: 5px;
+}
 
 .logging-container ion-button {
   --background: #527FE0;
@@ -92,20 +96,82 @@
   margin: 0 !important;
 }
 
+// DATA SECTION:
+
+.data-grid ion-col {
+  margin: 10px;
+  margin-bottom: 0;
+}
+
+/** Week Selector Container */
+.section-title{
+  font-weight: bold;
+  font-size: 8vw;
+  margin-top: 0;
+}
+
+.week-selector {
+  display: flex;
+  justify-content: space-around;
+  background: #555; /* Gray Background */
+  border-radius: 20px;
+  padding: 12px;
+}
+
+/** Each day container */
+.week-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 40px; 
+  height: 50px;
+  color: white;
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+/** Active Day */
+.week-day.active {
+  color: #4d79ff; /* Blue */
+}
+
+/** Styling for the letter (S, M, T, etc.) */
+.day-letter {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+/** Styling for the date number */
+.day-number {
+  font-size: 16px;
+  margin-top: 2px;
+}
+
+.selected-day-log h1 {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+
+// Ion Component Styling
+
 ion-toolbar {
   --background: #292929;
 }
 
 ion-icon {
-  color: rgb(199, 0, 199);
+  // color:#527FE0;
   font-size: 64;
 }
 
 ion-segment-button {
   --color: #ffffff;
-  --color-checked: rgb(151, 0, 151);
+  --color-checked: #527FE0;
   --border-radius: 20px;
 }
+
 
 ion-datetime {
   --background: rgb(55, 55, 55);
@@ -113,6 +179,7 @@ ion-datetime {
   --wheel-highlight-background: rgb(55, 55, 55);
   --wheel-highlight-border-radius: 48px;
   --wheel-fade-background-rgb: 55, 55, 55;
+  margin-left: 25px;
 }
 
 ion-datetime::part(wheel-item) {

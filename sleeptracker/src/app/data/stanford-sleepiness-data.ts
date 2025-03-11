@@ -14,11 +14,17 @@ export class StanfordSleepinessData extends SleepData {
 	'No longer fighting sleep, sleep onset soon; having dream-like thoughts']; //7
 
 	private loggedValue:number;
+	private sleepinessSummary:string;
 
 	constructor(loggedValue:number, loggedAt:Date = new Date()) {
 		super();
 		this.loggedValue = loggedValue;
 		this.loggedAt = loggedAt;
+		this.sleepinessSummary = this.summaryString();
+	}
+
+	getSleepinessLevel(): number {
+		return this.loggedValue;
 	}
 
 	override summaryString():string {
