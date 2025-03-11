@@ -176,8 +176,31 @@
       <!-- View Day's Log Section-->
       <ion-row>
         <ion-col>
+          <h1 class="section-title">View Day’s Logs</h1>
           <div class="selected-day-log">
-            <h1>View Day’s Logs</h1>
+
+            <!-- Add on click to share results -->
+            <div class="log-summary">
+              <div class="log-sleep">
+                <h2 class="log-label">Slept: </h2>
+                <p class="log-value" *ngIf="selectedLogSleepAmount; else noData">
+                  {{selectedLogSleepAmount}}
+                </p>
+              </div>
+
+              <div class="log-divider"></div>
+
+              <div class="log-sleepiness">
+                <h3 class="log-label">Rated Sleepiness: </h3>
+                <p class="log-value" *ngIf="selectedSleepinessLogRating; else noData">
+                  {{selectedSleepinessLogRating}}
+                </p>
+                <!-- Default message when no sleep data exists -->
+                <ng-template #noData>
+                  <p>No selected data available</p>
+                </ng-template>
+              </div>
+            </div>
           </div>
 
         </ion-col>

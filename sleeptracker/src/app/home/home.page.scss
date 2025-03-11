@@ -149,9 +149,50 @@
   margin-top: 2px;
 }
 
-.selected-day-log h1 {
-  font-weight: bold;
+.selected-day-log {
+  background: #505050; /* Dark Gray Background */
+  border-radius: 15px;
+  padding: 15px;
   margin-top: 10px;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+.log-summary {
+  display: flex;
+}
+
+.log-sleep,
+.log-sleepiness {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  flex: 1;
+}
+
+.log-label {
+  text-align: left;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+.log-value {
+  font-size: 20px;
+  margin-top: 5px;
+  margin-bottom: 0;
+}
+
+.log-divider {
+  width: 5px;
+  background: white; /* Vertical Divider */
+  height: 80%;
+  border-radius: 2px;
 }
 
 

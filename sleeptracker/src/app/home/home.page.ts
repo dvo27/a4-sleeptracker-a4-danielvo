@@ -49,6 +49,8 @@ export class HomePage implements OnInit {
 	selectedDate: string = ''
 	selectedLog: any = null;
 	selectedSleepinessLog: any = null;
+	selectedLogSleepAmount: string = '';
+	selectedSleepinessLogRating: number = 0;	// Give it a default of 0
 
 
 	constructor(private alertCtrl: AlertController, private sleepService: SleepService) { }
@@ -86,7 +88,6 @@ export class HomePage implements OnInit {
 	}
 	
 
-
 	updateSelectedDate() {
 		const selectedDateStr = this.selectedDate;
 	
@@ -109,13 +110,17 @@ export class HomePage implements OnInit {
 			console.log("Comparing Sleepiness Log Date:", logDateStr, "with Selected Date:", selectedDateStr);
 			return logDateStr === selectedDateStr;
 		}) || null;
+
+		this.selectedLogSleepAmount = this.selectedLog ? this.selectedLog.sleepSummary : 'No data';
+		this.selectedSleepinessLogRating = this.selectedSleepinessLog ? this.selectedSleepinessLog.getSleepinessLevel() : 'No data';
 	
 		console.log("Final Selected Sleep Log:", this.selectedLog);
+		console.log("Final Selected Sleep Log Sleep Amount:", this.selectedLogSleepAmount);
+		
 		console.log("Final Selected Sleepiness Log:", this.selectedSleepinessLog);
+		console.log("Final Selected Sleepiness Log Rating:", this.selectedSleepinessLogRating);
 	}
 	
-	
-
 
 	updateDateTime() {
 		const now = new Date();
